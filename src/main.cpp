@@ -30,7 +30,7 @@ class $modify(PlayerObject) {
     bool init(int p0, int p1, GJBaseGameLayer* p2, cocos2d::CCLayer* p3, bool p4) {
         if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
 
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::init(p0, p1, p2, p3, p4);
 
         // Change frames depending on what sprite u selected
         // Some sprites need to use 8 frames max
@@ -60,10 +60,10 @@ class $modify(PlayerObject) {
         return true;
     }
 
-    void update(float p0) {
+    void update(float p0) override {
         PlayerObject::update(p0);
 
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::update(p0);
 
         // Sync rotation
         if (m_fields->m_customSprite && m_mainLayer) {
@@ -155,7 +155,7 @@ class $modify(PlayerObject) {
     void bumpPlayer(float p0, int p1, bool p2, GameObject* p3) {
         PlayerObject::bumpPlayer(p0, p1, p2, p3);
 
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::bumpPlayer(p0, p1, p2, p3);
 
         if (m_isRobot && m_fields->m_customSprite) {
             m_fields->m_bumpTimer = 12.5f; 
@@ -170,13 +170,13 @@ class $modify(PlayerObject) {
     void playerDestroyed(bool p0) {
         PlayerObject::playerDestroyed(p0);
 
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::playerDestroyed(p0);
 
         m_robotBatchNode->setVisible(false);
     }
 
     virtual void setFlipX(bool p0) override {
-        if(!PlayLayer::get()) return;
+        if (!PlayLayer::get()) return PlayerObject::setFlipX(p0);
         if (p0 != m_fields->m_flippedX) {
             m_fields->m_flippedX = p0;
             m_fields->m_customSprite->setFlipX(p0); 
@@ -186,7 +186,7 @@ class $modify(PlayerObject) {
     }
 
     void doReversePlayer(bool p0) {
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::doReversePlayer(p0);
         if (p0 != m_fields->m_flippedX) {
             m_fields->m_flippedX = p0;
             m_fields->m_customSprite->setFlipX(p0); 
@@ -196,7 +196,7 @@ class $modify(PlayerObject) {
     }
 
     void setVisible(bool visible) {
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::setVisible(visible);
         PlayerObject::setVisible(visible);
         if (m_fields->m_customSprite) {
             m_fields->m_customSprite->setVisible(visible);
@@ -205,7 +205,7 @@ class $modify(PlayerObject) {
 
     void onExit() override {
 
-        if(!PlayLayer::get()) return;
+        if(!PlayLayer::get()) return PlayerObject::onExit();
         // cleanup custom sprite
         if (m_fields->m_customSprite) {
             m_fields->m_customSprite->removeFromParent();
