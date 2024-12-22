@@ -170,7 +170,7 @@ class $modify(PlayerObject) {
         if(!PlayLayer::get()) return PlayerObject::playerDestroyed(p0);
 
         m_robotBatchNode->setVisible(false);
-        m_customSprite->setVisible(false);
+        m_fields->m_customSprite->setVisible(false);
         
         PlayerObject::playerDestroyed(p0);
     }
