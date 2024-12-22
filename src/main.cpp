@@ -61,8 +61,6 @@ class $modify(PlayerObject) {
     }
 
     void update(float p0) override {
-        PlayerObject::update(p0);
-
         if(!PlayLayer::get()) return PlayerObject::update(p0);
 
         // Sync rotation
@@ -149,17 +147,18 @@ class $modify(PlayerObject) {
 
         // if i need to add anything else
         // do it here
+        PlayerObject::update(p0);
 
     }
 
     void bumpPlayer(float p0, int p1, bool p2, GameObject* p3) {
-        PlayerObject::bumpPlayer(p0, p1, p2, p3);
-
         if(!PlayLayer::get()) return PlayerObject::bumpPlayer(p0, p1, p2, p3);
 
         if (m_isRobot && m_fields->m_customSprite) {
             m_fields->m_bumpTimer = 12.5f; 
         }
+
+        PlayerObject::bumpPlayer(p0, p1, p2, p3);
         
     }
 
@@ -168,11 +167,12 @@ class $modify(PlayerObject) {
     // so uh
     // yeah ...
     void playerDestroyed(bool p0) {
-        PlayerObject::playerDestroyed(p0);
-
         if(!PlayLayer::get()) return PlayerObject::playerDestroyed(p0);
 
         m_robotBatchNode->setVisible(false);
+        m_customSprite->setVisible(false);
+        
+        PlayerObject::playerDestroyed(p0);
     }
 
     virtual void setFlipX(bool p0) override {
