@@ -63,6 +63,8 @@ class $modify(PlayerObject) {
     void update(float p0) override {
         if(!PlayLayer::get()) return PlayerObject::update(p0);
 
+        PlayerObject::update(p0);
+
         // Sync rotation
         if (m_fields->m_customSprite && m_mainLayer) {
             m_fields->m_customSprite->setRotation(m_mainLayer->getRotation());
@@ -147,7 +149,6 @@ class $modify(PlayerObject) {
 
         // if i need to add anything else
         // do it here
-        PlayerObject::update(p0);
 
     }
 
@@ -168,8 +169,7 @@ class $modify(PlayerObject) {
     // yeah ...
     void playerDestroyed(bool p0) {
         if(!PlayLayer::get()) return PlayerObject::playerDestroyed(p0);
-
-        m_robotBatchNode->setVisible(false);
+        
         m_fields->m_customSprite->setVisible(false);
         
         PlayerObject::playerDestroyed(p0);
@@ -196,8 +196,8 @@ class $modify(PlayerObject) {
     }
 
     void setVisible(bool visible) {
-        if(!PlayLayer::get()) return PlayerObject::setVisible(visible);
         PlayerObject::setVisible(visible);
+        
         if (m_fields->m_customSprite) {
             m_fields->m_customSprite->setVisible(visible);
         }
