@@ -23,17 +23,6 @@ class $modify(PlayerObject) {
         bool m_isUsingExtendedFrames = false;
     };
 
-    // give birth to sonic (real)
-    std::string frameName = fmt::format("{}sonicRun_01.png"_spr, chosenGameSprite);
-    auto sonicSprite = CCSprite::createWithSpriteFrameName(frameName.c_str());
-    if (sonicSprite) {
-        sonicSprite->setAnchorPoint({0.5f, 0.5f});
-        sonicSprite->setID("sonic-anim"_spr);
-        sonicSprite->setZOrder(10);
-        sonicSprite->setVisible(false);
-        this->addChild(sonicSprite);
-    }
-
     bool init(int p0, int p1, GJBaseGameLayer* p2, cocos2d::CCLayer* p3, bool p4) {
         if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
 
@@ -51,6 +40,16 @@ class $modify(PlayerObject) {
         // Hide robot node
         m_robotBatchNode->setVisible(false);
 
+        // give birth to sonic (real)
+        m_fields->m_sonicSprite = CCSprite::createWithSpriteFrameName("{}sonicRun_01.png"_spr, chosenGameSprite);
+        if (m_fields->m_sonicSprite) {
+            m_fields->m_sonicSprite->setAnchorPoint({0.5f, 0.5f});
+            m_fields->m_sonicSprite->setPosition(this->getPosition());
+            m_fields->m_sonicSprite->setVisible(false);
+            m_fields->m_sonicSprite->setID("sonic-anim"_spr);
+            this->addChild(m_fields->m_sonicSprite, 10);
+        }
+
         return true;
     }
 
@@ -58,18 +57,18 @@ class $modify(PlayerObject) {
         PlayerObject::update(p0);
 
         // Sync rotation
-        if (sonicSprite && m_mainLayer) {
-            sonicSprite->setRotation(m_mainLayer->getRotation());
+        if (m_fields->m_sonicSprite && m_mainLayer) {
+            m_fields->m_sonicSprite->setRotation(m_mainLayer->getRotation());
 
             // y flip
             bool mainLayerFlippedY = m_mainLayer->getScaleY() < 0;
-            sonicSprite->setFlipY(mainLayerFlippedY);
+            m_fields->m_sonicSprite->setFlipY(mainLayerFlippedY);
         }
 
         // Check if ur a robot
-        if (!m_isRobot || !sonicSprite) {
-            if (sonicSprite) {
-                sonicSprite->setVisible(false);
+        if (!m_isRobot || !m_fields->m_sonicSprite) {
+            if (m_fields->m_sonicSprite) {
+                m_fields->m_sonicSprite->setVisible(false);
             }
             return;
         }
@@ -79,13 +78,13 @@ class $modify(PlayerObject) {
         m_robotFire->setVisible(false);
         m_robotBurstParticles->setVisible(false);
 
-        sonicSprite->setVisible(true);
+        m_fields->m_sonicSprite->setVisible(true);
 
         // bump anim for pads
         if (m_fields->m_bumpTimer > 0.f) {
 
             std::string frameName = fmt::format("{}sonicBumped_01.png"_spr, chosenGameSprite);
-            sonicSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(frameName.c_str()));
+            m_fields->m_sonicSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(frameName.c_str()));
             m_fields->m_bumpTimer -= 0.2f;
             m_fields->m_animationTimer = 0; 
             return;
@@ -96,9 +95,8 @@ class $modify(PlayerObject) {
         if (m_isPlatformer && m_platformerXVelocity == 0 && m_isOnGround) {
 
             std::string frameName = fmt::format("{}sonicIdle_01.png"_spr, chosenGameSprite);
-            sonicSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(frameName.c_str()));
+            m_fields->m_sonicSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(frameName.c_str()));
             m_fields->m_animationTimer = 0;
-
         } else {
             // set current animation (run or jump)
             std::string frameName;
@@ -134,7 +132,7 @@ class $modify(PlayerObject) {
 
                 // Only update if valid
                 if (frame) {
-                    sonicSprite->setDisplayFrame(frame);
+                    m_fields->m_sonicSprite->setDisplayFrame(frame);
                 }
             }
         }
@@ -147,7 +145,7 @@ class $modify(PlayerObject) {
     void bumpPlayer(float p0, int p1, bool p2, GameObject* p3) {
         PlayerObject::bumpPlayer(p0, p1, p2, p3);
 
-        if (m_isRobot && sonicSprite) {
+        if (m_isRobot && m_fields->m_sonicSprite) {
             m_fields->m_bumpTimer = 12.5f; 
         }
         
@@ -166,7 +164,7 @@ class $modify(PlayerObject) {
     virtual void setFlipX(bool p0) override {
         if (p0 != m_fields->m_flippedX) {
             m_fields->m_flippedX = p0;
-            sonicSprite->setFlipX(p0); 
+            m_fields->m_sonicSprite->setFlipX(p0); 
         }
 
         PlayerObject::setFlipX(p0);
@@ -175,7 +173,7 @@ class $modify(PlayerObject) {
     void doReversePlayer(bool p0) {
         if (p0 != m_fields->m_flippedX) {
             m_fields->m_flippedX = p0;
-            sonicSprite->setFlipX(p0); 
+            m_fields->m_sonicSprite->setFlipX(p0); 
         }
 
         PlayerObject::doReversePlayer(p0);
@@ -183,16 +181,16 @@ class $modify(PlayerObject) {
 
     void setVisible(bool visible) {
         PlayerObject::setVisible(visible);
-        if (sonicSprite) {
-            sonicSprite->setVisible(visible);
+        if (m_fields->m_sonicSprite) {
+            m_fields->m_sonicSprite->setVisible(visible);
         }
     }
 
     void onExit() override {
         // cleanup custom sprite
-        if (sonicSprite) {
-            sonicSprite->removeFromParent();
-            sonicSprite = nullptr;
+        if (m_fields->m_sonicSprite) {
+            m_fields->m_sonicSprite->removeFromParent();
+            m_fields->m_sonicSprite = nullptr;
         }
         PlayerObject::onExit();
     }
