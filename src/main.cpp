@@ -42,6 +42,7 @@ class $modify(PlayerObject) {
         m_robotBatchNode->setVisible(false);
 
         // give birth to sonic (real)
+        std::string frameName = fmt::format("{}sonicRun_01.png"_spr, chosenGameSprite);
         m_fields->m_sonicSprite = CCSprite::createWithSpriteFrameName("{}sonicRun_01.png"_spr, chosenGameSprite);
         if (m_fields->m_sonicSprite) {
             m_fields->m_sonicSprite->setAnchorPoint({0.5f, 0.5f});
