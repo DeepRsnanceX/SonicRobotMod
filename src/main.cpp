@@ -21,6 +21,7 @@ class $modify(PlayerObject) {
         bool m_flippedX = false; 
         bool m_flippedY = false; 
         bool m_isUsingExtendedFrames = false;
+        CCSprite* m_sonicSprite = nullptr;
     };
 
     bool init(int p0, int p1, GJBaseGameLayer* p2, cocos2d::CCLayer* p3, bool p4) {
@@ -46,8 +47,9 @@ class $modify(PlayerObject) {
             m_fields->m_sonicSprite->setAnchorPoint({0.5f, 0.5f});
             m_fields->m_sonicSprite->setPosition(this->getPosition());
             m_fields->m_sonicSprite->setVisible(false);
+            m_fields->m_sonicSprite->setZOrder(10);
             m_fields->m_sonicSprite->setID("sonic-anim"_spr);
-            this->addChild(m_fields->m_sonicSprite, 10);
+            this->addChild(m_fields->m_sonicSprite);
         }
 
         return true;
