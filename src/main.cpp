@@ -43,7 +43,7 @@ class $modify(PlayerObject) {
 
         // give birth to sonic (real)
         std::string frameName = fmt::format("{}sonicRun_01.png"_spr, chosenGameSprite);
-        m_fields->m_sonicSprite = CCSprite::createWithSpriteFrameName("{}sonicRun_01.png"_spr, chosenGameSprite);
+        m_fields->m_sonicSprite = CCSprite::createWithSpriteFrameName(frameName.c_str());
         if (m_fields->m_sonicSprite) {
             m_fields->m_sonicSprite->setAnchorPoint({0.5f, 0.5f});
             m_fields->m_sonicSprite->setPosition(this->getPosition());
