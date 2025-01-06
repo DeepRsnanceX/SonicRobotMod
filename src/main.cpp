@@ -23,6 +23,17 @@ class $modify(PlayerObject) {
         bool m_isUsingExtendedFrames = false;
     };
 
+    // give birth to sonic (real)
+        std::string frameName = fmt::format("{}sonicRun_01.png"_spr, chosenGameSprite);
+        auto sonicSprite = CCSprite::createWithSpriteFrameName(frameName.c_str());
+        if (sonicSprite) {
+            sonicSprite->setAnchorPoint({0.5f, 0.5f});
+            sonicSprite->setID("sonic-anim"_spr);
+            sonicSprite->setZOrder(10);
+            sonicSprite->setVisible(false);
+            this->addChild(sonicSprite);
+        }
+
     bool init(int p0, int p1, GJBaseGameLayer* p2, cocos2d::CCLayer* p3, bool p4) {
         if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
 
@@ -39,17 +50,6 @@ class $modify(PlayerObject) {
 
         // Hide robot node
         m_robotBatchNode->setVisible(false);
-
-        // give birth to sonic (real)
-        std::string frameName = fmt::format("{}sonicRun_01.png"_spr, chosenGameSprite);
-        auto sonicSprite = CCSprite::createWithSpriteFrameName(frameName.c_str());
-        if (sonicSprite) {
-            sonicSprite->setAnchorPoint({0.5f, 0.5f});
-            sonicSprite->setID("sonic-anim"_spr);
-            sonicSprite->setZOrder(10);
-            sonicSprite->setVisible(false);
-            this->addChild(sonicSprite);
-        }
 
         return true;
     }
