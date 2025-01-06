@@ -49,6 +49,7 @@ class $modify(PlayerObject) {
             sonicSprite->setZOrder(10);
             sonicSprite->setVisible(false);
             this->addChild(sonicSprite);
+        }
 
         return true;
     }
