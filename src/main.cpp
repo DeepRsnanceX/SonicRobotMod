@@ -72,7 +72,7 @@ $on_mod(Loaded) {
     listenForSettingChanges("sonic-cube", [](bool value) {
         sonicCube = value;
     });
-    listenForSettingChanges("cubejump-sfx", [](bool value) {
+    listenForSettingChanges("cubejump-sfx", [](std::string value) {
         cubeJumpSFX = value;
     });
 }
